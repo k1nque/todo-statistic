@@ -12,7 +12,9 @@ function getFiles() {
 }
 
 function show(file) {
-    return file.split('\n').filter(x => x.startsWith('// TODO'));
+    return file.split('\n')
+        .filter(x => x.indexOf('// TOD' + 'O') !== -1)
+        .map(x => x.split('// TOD' + 'O')[1]);
 }
 
 function important(file) {
@@ -20,7 +22,10 @@ function important(file) {
 }
 
 function user(file, name) {
-    return show(file).filter(x => x.split(';')[0].slice(8) === name)
+    //show(file).forEach(x =>
+    //    console.log(x.split(';')[0].toLowerCase(), name.toLowerCase()));
+    return show(file).filter(x =>
+        x.split(';')[0].toLowerCase().trim() === name.toLowerCase());
 }
 
 function findComments(func) {
@@ -29,11 +34,17 @@ function findComments(func) {
             .forEach(y => console.log(y)));
 }
 
+function findComments2(func, name) {
+    getFiles()
+        .forEach(x => func(x, name)
+            .forEach(y => console.log(y)));
+}
+
 
 function processCommand(command) {
     if (command.split(' ')[0] === 'user') {
-        let userName = command.slice(command.indexOf(' ') + 1);
-        getFiles(user);
+        const userName = command.slice(command.indexOf(' ') + 1);
+        findComments2(user, userName);
         process.exit(0);
     }
     switch (command) {
