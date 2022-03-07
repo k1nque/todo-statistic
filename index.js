@@ -22,8 +22,6 @@ function important(file) {
 }
 
 function user(file, name) {
-    //show(file).forEach(x =>
-    //    console.log(x.split(';')[0].toLowerCase(), name.toLowerCase()));
     return show(file).filter(x =>
         x.split(';')[0].toLowerCase().trim() === name.toLowerCase());
 }
@@ -38,6 +36,32 @@ function findComments2(func, name) {
     getFiles()
         .forEach(x => func(x, name)
             .forEach(y => console.log(y)));
+}
+
+/*function count(str, symb) {
+    for (var count = -1, index = 0; index != -1; count++, index = str.indexOf(symb, index + 1));
+    return count;
+}*/
+function count(str) {
+    return str.split("!").length - 1
+}
+
+function sortComments(type) {
+    switch (type) {
+        case 'importance':
+            return getFiles().flatMap(x => show(x))
+                .sort((a, b) => count(a) < count(b) ? 1 : -1)
+                .forEach(y => console.log(y));
+            break;
+        case 'user':
+            break;
+        case 'date':
+            break;
+        default:
+            console.log('wrong command');
+            break;
+    }
+
 }
 
 
@@ -57,6 +81,9 @@ function processCommand(command) {
         case 'important':
             findComments(important);
             break;
+        case 'sort':
+            sortComments('importance');
+            break
         default:
             console.log('wrong command');
             break;
